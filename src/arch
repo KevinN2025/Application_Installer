@@ -29,6 +29,16 @@ else
   exit 1
 fi
 
+# Install desktop environment
+print_header "Installing Desktop Environment"
+echo "Packages: kde-plasma"
+if sudo pacman -S kde-plasma; then
+  echo "Desktop environment installation completed successfully"
+else
+  echo "Desktop environment installation failed"
+  exit 1
+fi
+
 # Install dependencies
 print_header "Installing Dependencies"
 echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor, zsh"
@@ -36,6 +46,26 @@ if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon to
   echo "Dependency installation completed successfully"
 else
   echo "Dependency installation failed"
+  exit 1
+fi
+
+# Install desktop applications
+print_header "Installing Desktop Applications"
+echo "Packages: obs-studio, gimp3, zathura, kdelivestudio, vlc, firefox, thunderbird, okular, p7zip, unrar, ark, ufw, gufw, keepassxc, libreoffice-fresh, discord, lf"
+if sudo pacman -S obs-studio gimp3 zathura kdelivestudio vlc firefox thunderbird okular p7zip unrar ark ufw gufw keepassxc libreoffice-fresh discord lf; then
+  echo "Desktop application installation completed successfully"
+else
+  echo "Desktop application installation failed"
+  exit 1
+fi
+
+# Install service applications
+print_header "Installing Service Applications"
+echo "Packages: mariadb, httpd, ollama"
+if sudo pacman -S mariadb httpd ollama; then
+  echo "Service application installation completed successfully"
+else
+  echo "Service application installation failed"
   exit 1
 fi
 
