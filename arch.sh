@@ -31,8 +31,8 @@ fi
 
 # Install dependencies
 print_header "Installing Dependencies"
-echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor-browser, tor, zsh"
-if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon tor-browser tor zsh; then
+echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor, zsh"
+if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon tor zsh; then
   echo "Dependency installation completed successfully"
 else
   echo "Dependency installation failed"
