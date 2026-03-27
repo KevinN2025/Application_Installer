@@ -49,6 +49,15 @@ else
   exit 1
 fi
 
+# Sync Neovim configuration
+print_header "Updating Neovim Configuration"
+if bash "$(dirname "$0")/nvim_config.sh"; then
+  echo "Neovim configuration updated successfully"
+else
+  echo "Neovim configuration update failed"
+  exit 1
+fi
+
 # Install yay from AUR GitHub repository
 print_header "Preparing yay Installation"
 echo "Installing build tools required for yay"
