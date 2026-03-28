@@ -51,7 +51,7 @@ fi
 
 # Install desktop applications
 print_header "Installing Desktop Applications"
-echo "Packages: obs-studio, gimp3, zathura, kdelivestudio, vlc, firefox, thunderbird, okular, p7zip, unrar, ark, ufw, gufw, keepassxc, libreoffice-fresh, discord, lf"
+echo "Packages: obs-studio, gimp, zathura, kdenlive, vlc, firefox, thunderbird, okular, p7zip, unrar, ark, ufw, gufw, keepassxc, libreoffice-fresh, discord, lf"
 if sudo pacman -S obs-studio gimp zathura kdenlive vlc firefox thunderbird okular p7zip unrar ark ufw gufw keepassxc libreoffice-fresh discord lf; then
   echo "Desktop application installation completed successfully"
 else
@@ -61,7 +61,7 @@ fi
 
 # Install service applications
 print_header "Installing Service Applications"
-echo "Packages: mariadb, httpd, ollama"
+echo "Packages: mariadb, apache, ollama"
 if sudo pacman -S mariadb apache ollama; then
   echo "Service application installation completed successfully"
 else
@@ -71,7 +71,7 @@ fi
 
 # Install languages
 print_header "Installing Programming Languages"
-echo "Packages: Go, Rust, Java, C, C++, Ruby, Python"
+echo "Packages: go, rust, jdk-openjdk, gcc, ruby, python"
 if sudo pacman -S go rust jdk-openjdk gcc ruby python; then
   echo "Programming language installation completed successfully"
 else
