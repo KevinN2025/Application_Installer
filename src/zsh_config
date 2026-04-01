@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+REPO_URL="https://github.com/KevinN2025/zshrc_file.git"
+ZSH_CONFIG_REPO_DIR="${HOME}/.config/zshrc_file"
+ZSHRC_SOURCE_FILE="${ZSH_CONFIG_REPO_DIR}/.zshrc"
+ZSHRC_TARGET_FILE="${HOME}/.zshrc"
+
+echo "Syncing Zsh configuration from ${REPO_URL}"
+
+mkdir -p "${HOME}/.config"
+
+if [ -d "${ZSH_CONFIG_REPO_DIR}/.git" ]; then
+  echo "Existing Zsh config repository found, pulling latest changes"
+  git -C "${ZSH_CONFIG_REPO_DIR}" pull --ff-only
+elif [ -e "${ZSH_CONFIG_REPO_DIR}" ]; then
+  echo "Cannot install Zsh config because ${ZSH_CONFIG_REPO_DIR} exists and is not a git repository"
+  exit 1
+else
+  echo "Cloning Zsh config into ${ZSH_CONFIG_REPO_DIR}"
+  git clone "${REPO_URL}" "${ZSH_CONFIG_REPO_DIR}"
+fi
+
+if [ ! -f "${ZSHRC_SOURCE_FILE}" ]; then
+  echo "Expected Zsh config file ${ZSHRC_SOURCE_FILE} was not found"
+  exit 1
+fi
+
+echo "Installing ${ZSHRC_TARGET_FILE} from repository copy"
+install -m 644 "${ZSHRC_SOURCE_FILE}" "${ZSHRC_TARGET_FILE}"
+
+echo "Zsh configuration is up to date"
