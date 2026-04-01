@@ -88,6 +88,35 @@ else
   exit 1
 fi
 
+# Sync Alacritty configuration
+print_header "Updating Alacritty Configuration"
+if bash "$(dirname "$0")/alacritty_config"; then
+  echo "Alacritty configuration updated successfully"
+else
+  echo "Alacritty configuration update failed"
+  exit 1
+fi
+
+# Install oh-my-zsh
+print_header "Installing oh-my-zsh"
+if [ -d "${HOME}/.oh-my-zsh" ]; then
+  echo "oh-my-zsh is already installed, skipping installation"
+elif RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"; then
+  echo "oh-my-zsh installed successfully"
+else
+  echo "oh-my-zsh installation failed"
+  exit 1
+fi
+
+# Sync Zsh configuration
+print_header "Updating Zsh Configuration"
+if bash "$(dirname "$0")/zsh_config"; then
+  echo "Zsh configuration updated successfully"
+else
+  echo "Zsh configuration update failed"
+  exit 1
+fi
+
 # Install yay from AUR GitHub repository
 print_header "Preparing yay Installation"
 echo "Installing build tools required for yay"
