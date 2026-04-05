@@ -41,8 +41,8 @@ fi
 
 # Install dependencies
 print_header "Installing Dependencies"
-echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor, zsh"
-if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon tor zsh; then
+echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor, zsh, tmux"
+if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon tor zsh tmux; then
   echo "Dependency installation completed successfully"
 else
   echo "Dependency installation failed"
@@ -94,6 +94,15 @@ if bash "$(dirname "$0")/alacritty_config"; then
   echo "Alacritty configuration updated successfully"
 else
   echo "Alacritty configuration update failed"
+  exit 1
+fi
+
+# Sync tmux configuration
+print_header "Updating tmux Configuration"
+if bash "$(dirname "$0")/tmux_config"; then
+  echo "tmux configuration updated successfully"
+else
+  echo "tmux configuration update failed"
   exit 1
 fi
 

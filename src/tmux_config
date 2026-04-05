@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -e
+
+REPO_URL="https://github.com/KevinN2025/tmux_config.git"
+TMUX_CONFIG_REPO_DIR="${HOME}/.config/tmux_config"
+TMUX_SOURCE_FILE="${TMUX_CONFIG_REPO_DIR}/.tmux.conf"
+TMUX_TARGET_FILE="${HOME}/.tmux.conf"
+
+echo "Syncing tmux configuration from ${REPO_URL}"
+
+mkdir -p "${HOME}/.config"
+
+if [ -d "${TMUX_CONFIG_REPO_DIR}/.git" ]; then
+  echo "Existing tmux config repository found, pulling latest changes"
+  git -C "${TMUX_CONFIG_REPO_DIR}" pull --ff-only
+elif [ -e "${TMUX_CONFIG_REPO_DIR}" ]; then
+  echo "Cannot install tmux config because ${TMUX_CONFIG_REPO_DIR} exists and is not a git repository"
+  exit 1
+else
+  echo "Cloning tmux config into ${TMUX_CONFIG_REPO_DIR}"
+  git clone "${REPO_URL}" "${TMUX_CONFIG_REPO_DIR}"
+fi
+
+if [ ! -f "${TMUX_SOURCE_FILE}" ]; then
+  echo "Expected tmux config file ${TMUX_SOURCE_FILE} was not found"
+  exit 1
+fi
+
+echo "Installing ${TMUX_TARGET_FILE} from repository copy"
+install -m 644 "${TMUX_SOURCE_FILE}" "${TMUX_TARGET_FILE}"
+
+echo "tmux configuration is up to date"
