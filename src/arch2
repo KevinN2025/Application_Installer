@@ -1,0 +1,183 @@
+#!/bin/bash
+
+print_header() {
+  local title="$1"
+  local width=72
+  local border
+
+  border=$(printf '%*s' "$width" '' | tr ' ' '=')
+
+  if command -v tput >/dev/null 2>&1 && [ -n "${TERM:-}" ]; then
+    printf '\n%s%s%s\n' "$(tput bold)$(tput setaf 6)" "$border" "$(tput sgr0)"
+    printf '%s  %s%s\n' "$(tput bold)$(tput setaf 6)" "$title" "$(tput sgr0)"
+    printf '%s%s%s\n\n' "$(tput bold)$(tput setaf 6)" "$border" "$(tput sgr0)"
+  else
+    printf '\n%s\n' "$border"
+    printf '  %s\n' "$title"
+    printf '%s\n\n' "$border"
+  fi
+}
+
+# Arch
+
+# Update Arch
+print_header "Updating Arch"
+if sudo pacman -Syu; then
+  echo "Arch update completed successfully"
+else
+  echo "Arch update failed"
+  exit 1
+fi
+
+# Install desktop environment
+print_header "Installing Desktop Environment"
+echo "Packages: xfce4 and xfce4-goodies"
+if sudo pacman -S xfce4 xfce4-goodies; then
+  echo "Desktop environment installation completed successfully"
+else
+  echo "Desktop environment installation failed"
+  exit 1
+fi
+
+# Install dependencies
+print_header "Installing Dependencies"
+echo "Packages: git, curl, wget, neovim, btop, cpufetch, fastfetch, alacritty, bmon, tor, zsh, tmux, bat, fzf, fd"
+if sudo pacman -S git curl wget neovim btop cpufetch fastfetch alacritty bmon tor zsh tmux bat fzf fd; then
+  echo "Dependency installation completed successfully"
+else
+  echo "Dependency installation failed"
+  exit 1
+fi
+
+# Install desktop applications
+print_header "Installing Desktop Applications"
+echo "Packages: obs-studio, gimp, zathura, kdenlive, vlc, firefox, thunderbird, okular, p7zip, unrar, ark, ufw, gufw, keepassxc, libreoffice-fresh, discord, lf"
+if sudo pacman -S obs-studio gimp zathura kdenlive vlc firefox thunderbird okular p7zip unrar ark ufw gufw keepassxc libreoffice-fresh discord lf; then
+  echo "Desktop application installation completed successfully"
+else
+  echo "Desktop application installation failed"
+  exit 1
+fi
+
+# Install service applications
+print_header "Installing Service Applications"
+echo "Packages: mariadb, apache, ollama"
+if sudo pacman -S mariadb apache ollama; then
+  echo "Service application installation completed successfully"
+else
+  echo "Service application installation failed"
+  exit 1
+fi
+
+# Install languages
+print_header "Installing Programming Languages"
+echo "Packages: go, rust, jdk-openjdk, gcc, ruby, python"
+if sudo pacman -S go rust jdk-openjdk gcc ruby python; then
+  echo "Programming language installation completed successfully"
+else
+  echo "Programming language installation failed"
+  exit 1
+fi
+
+# Sync Neovim configuration
+print_header "Updating Neovim Configuration"
+if bash "$(dirname "$0")/nvim_config"; then
+  echo "Neovim configuration updated successfully"
+else
+  echo "Neovim configuration update failed"
+  exit 1
+fi
+
+# Sync Alacritty configuration
+print_header "Updating Alacritty Configuration"
+if bash "$(dirname "$0")/alacritty_config"; then
+  echo "Alacritty configuration updated successfully"
+else
+  echo "Alacritty configuration update failed"
+  exit 1
+fi
+
+# Sync tmux configuration
+print_header "Updating tmux Configuration"
+if bash "$(dirname "$0")/tmux_config"; then
+  echo "tmux configuration updated successfully"
+else
+  echo "tmux configuration update failed"
+  exit 1
+fi
+
+# Install oh-my-zsh
+print_header "Installing oh-my-zsh"
+if [ -d "${HOME}/.oh-my-zsh" ]; then
+  echo "oh-my-zsh is already installed, skipping installation"
+elif RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"; then
+  echo "oh-my-zsh installed successfully"
+else
+  echo "oh-my-zsh installation failed"
+  exit 1
+fi
+
+# Sync Zsh configuration
+print_header "Updating Zsh Configuration"
+if bash "$(dirname "$0")/zsh_config"; then
+  echo "Zsh configuration updated successfully"
+else
+  echo "Zsh configuration update failed"
+  exit 1
+fi
+
+# Install yay from AUR GitHub repository
+print_header "Preparing yay Installation"
+echo "Installing build tools required for yay"
+if sudo pacman -S base-devel; then
+  echo "Build tools for yay installed successfully"
+else
+  echo "Failed to install build tools for yay"
+  exit 1
+fi
+
+if command -v yay >/dev/null 2>&1; then
+  echo "yay is already installed, skipping installation"
+else
+  print_header "Fetching yay Source"
+  echo "Preparing yay source directory"
+  rm -rf /tmp/yay
+
+  echo "Cloning yay from GitHub"
+  if git clone https://aur.archlinux.org/yay.git /tmp/yay; then
+    echo "yay repository cloned successfully"
+  else
+    echo "Failed to clone yay repository"
+    exit 1
+  fi
+
+  print_header "Building yay"
+  echo "Building and installing yay"
+  cd /tmp/yay || exit 1
+  if makepkg -si; then
+    echo "yay installed successfully"
+  else
+    echo "yay installation failed"
+    exit 1
+  fi
+  cd - >/dev/null || exit 1
+fi
+
+if command -v yay >/dev/null 2>&1; then
+  echo "yay is available"
+else
+  echo "yay installation failed"
+  exit 1
+fi
+
+# Install penetration testing applications
+print_header "Installing Penetration Testing Applications"
+echo "Packages: nmap, wireshark-qt, burpsuite, sqlmap, hydra, aircrack-ng, metasploit, bettercap, john"
+if yay -S nmap wireshark-qt burpsuite sqlmap hydra aircrack-ng metasploit bettercap john; then
+  echo "Penetration testing applications installed successfully"
+else
+  echo "Penetration testing application installation failed"
+  exit 1
+fi
+
+print_header "Arch Setup Complete"
